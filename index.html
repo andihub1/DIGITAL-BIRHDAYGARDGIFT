@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Happy Birthday ❤️</title>
+<style>
+  body {
+    margin:0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:linear-gradient(135deg,#ff006f,#ffe6f0,#fd0076,#ffd6eb);
+    background-size:400% 400%;
+    animation: gradientBG 10s ease infinite;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    text-align:center;
+    overflow:hidden;
+    position: relative;
+  }
+
+  /* Smooth fade for background */
+  body.bg-changed {
+    background: url("background.png") no-repeat center center fixed;
+    background-size: medium cover;
+    animation: none; /* stop gradient animation */
+    transition: background 1s ease-in-out;
+  }
+
+  /* Animated gradient */
+  @keyframes gradientBG {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+  }
+
+  /* Floating hearts */
+  .heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: pink;
+    transform: rotate(45deg);
+    animation: floatUp 8s linear infinite;
+    opacity: 0.7;
+    z-index: 1;
+  }
+  .heart::before,
+  .heart::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: pink;
+    border-radius: 50%;
+  }
+  .heart::before { top: -10px; left: 0; }
+  .heart::after { left: -10px; top: 0; }
+
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(45deg) scale(0.8); opacity: 0.7; }
+    100% { transform: translateY(-10vh) rotate(45deg) scale(1.2); opacity: 0; }
+  }
+
+  .card {
+    width:90%;
+    max-width:420px;
+    background: url("https://i.pinimg.com/736x/85/92/1c/85921c6d97423b725f75da6462b51217.jpg");
+    border-radius:50px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    padding:20px;
+    z-index:10;
+    position: relative;
+  }
+
+  .card img {
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:12px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.2);
+  }
+
+  h1 {
+    font-size:1.6rem;
+    margin:10px 0;
+    color:#b30058;
+  }
+  p {
+    font-size:1rem;
+    line-height:1.5;
+    color:#40313c;
+  }
+  button {
+    width:100%;
+    padding:12px;
+    border:0;
+    border-radius:12px;
+    font-size:1.1rem;
+    font-weight:bold;
+    background:#ff4da6;
+    color:white;
+    box-shadow:0 6px 14px rgba(255,77,166,0.25);
+    cursor:pointer;
+  }
+  #messageBox {
+    display:none;
+    margin-top:16px;
+    padding:14px;
+    border-radius:12px;
+    background:#fff0f7;
+    color:#6b2140;
+    font-size:1rem;
+  }
+  canvas {
+    position:fixed;
+    top:0;left:0;width:100%;height:100%;
+    pointer-events:none;z-index:5;
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<!-- Floating hearts -->
+<div class="heart" style="left:10%; animation-delay:0s;"></div>
+<div class="heart" style="left:30%; animation-delay:2s;"></div>
+<div class="heart" style="left:50%; animation-delay:4s;"></div>
+<div class="heart" style="left:70%; animation-delay:1s;"></div>
+<div class="heart" style="left:90%; animation-delay:3s;"></div>
+
+<div class="card">
+  <!-- Birthday image -->
+  <img src="esang.jpg" alt="Birthday Image">
+
+  <h1>Happy Birthday, <span id="nameDisplay">My Lovey</span> 💖</h1>
+  <button id="surpriseBtn">🎉 Surprise!</button>
+  <div id="messageBox">
+    <p id="personalMessage">
+      HELLO MY LOVE! 💕
+HAPPY BIRTHDAY! 🥳
+
+On this very special day, I want you to know how much you truly mean to me. You are my greatest blessing and the most beautiful part of my life. I pray that your year ahead will be filled with endless love, joy, success, and happiness.
+Thank you for always bringing light, laughter, and love into my world. Even when I can be stubborn at times, please know that my love for you never fades—it only grows stronger every single day. 💖
+I promise to stand by you, cherish you, and love you endlessly through all the days of our lives. You are my one and only, my forever, my everything.
+Once again, Happy Birthday my lovey! 🎂🎉
+I love you endlessly, more than words could ever express. 💕
+    </p>
+  </div>
+</div>
+
+<script>
+/* --- Elements --- */
+const nameDisplay=document.getElementById('nameDisplay');
+const messageBox=document.getElementById('messageBox');
+const surpriseBtn=document.getElementById('surpriseBtn');
+
+/* --- Confetti --- */
+const canvas=document.getElementById('confetti');
+const ctx=canvas.getContext('2d');
+let W,H;function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
+resize();addEventListener('resize',resize);
+let confetti=[];
+function startConfetti(){
+  confetti=[];
+  for(let i=0;i<120;i++){
+    confetti.push({x:Math.random()*W,y:Math.random()*H,
+      r:Math.random()*6+4,
+      color:`hsl(${Math.random()*360},100%,70%)`});
+  }
+  requestAnimationFrame(draw);
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  confetti.forEach(p=>{
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.color;ctx.fill();
+    p.y+=2;if(p.y>H){p.y=0;p.x=Math.random()*W;}
+  });
+  if(confetti.length) requestAnimationFrame(draw);
+}
+
+/* --- Button click --- */
+surpriseBtn.onclick=()=>{
+  const v="My Love"; // fixed name
+  nameDisplay.textContent=v;
+  document.title="Happy Birthday, "+v;
+  messageBox.style.display="block";
+  startConfetti();
+
+  // Change background to your picture
+  document.body.classList.add("bg-changed");
+};
+</script>
+</body>
+</html>
